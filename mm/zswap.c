@@ -76,8 +76,8 @@ static u64 zswap_duplicate_entry;
 * tunables
 **********************************/
 
-/* Enable/disable zswap (disabled by default) */
-static bool zswap_enabled;
+/* Enable/disable zswap (enabled by default) */
+static bool zswap_enabled = 1;
 static int zswap_enabled_param_set(const char *,
 				   const struct kernel_param *);
 static struct kernel_param_ops zswap_enabled_param_ops = {
