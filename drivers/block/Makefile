@@ -44,4 +44,7 @@ obj-$(CONFIG_BLK_DEV_NULL_BLK)	+= null_blk.o
 obj-$(CONFIG_ZRAM) += zram/
 
 skd-y		:= skd_main.o
+
+obj-$(CONFIG_VBSWAP) += vbswap/
+
 swim_mod-y	:= swim.o swim_asm.o
