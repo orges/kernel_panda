@@ -76,8 +76,8 @@ static u64 zswap_duplicate_entry;
 * tunables
 **********************************/
 
-/* Enable/disable zswap (disabled by default) */
-static bool zswap_enabled;
+/* Enable/disable zswap (enabled by default) */
+static bool zswap_enabled = 1;
 static int zswap_enabled_param_set(const char *,
 				   const struct kernel_param *);
 static struct kernel_param_ops zswap_enabled_param_ops = {
@@ -240,7 +240,7 @@ static struct zswap_entry *zswap_entry_cache_alloc(gfp_t gfp)
 {
 	struct zswap_entry *entry;
 	entry = kmem_cache_alloc(zswap_entry_cache, gfp);
-	if (!entry)
+	if (unlikely(!entry))
 		return NULL;
 	entry->refcount = 1;
 	return entry;
@@ -1004,7 +1004,7 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
 
 	/* allocate entry */
 	entry = zswap_entry_cache_alloc(GFP_KERNEL);
-	if (!entry) {
+	if (unlikely(!entry)) {
 		zswap_reject_kmemcache_fail++;
 		ret = -ENOMEM;
 		goto reject;
@@ -1209,8 +1209,6 @@ static int __init zswap_debugfs_init(void)
 		return -ENODEV;
 
 	zswap_debugfs_root = debugfs_create_dir("zswap", NULL);
-	if (!zswap_debugfs_root)
-		return -ENOMEM;
 
 	debugfs_create_u64("pool_limit_hit", S_IRUGO,
 			zswap_debugfs_root, &zswap_pool_limit_hit);
